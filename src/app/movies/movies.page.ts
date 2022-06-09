@@ -126,6 +126,7 @@ export class MoviesPage implements OnInit {
             return movie;
           });
         this.movies = modifiedMovie;
+        _.pullAllBy(this.movies, this.badMovies, 'id')
         // const newArray = []
         // for (const m of this.movies) {
         //   if (this.badMovies.includes(m,0)) {
