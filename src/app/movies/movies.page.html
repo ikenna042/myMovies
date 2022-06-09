@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>My Movies</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-searchbar (ionChange)="search()" (ionClear)="onClear()" [(ngModel)]="searchField" placeholder="Enter movie name" debounce="500" animated></ion-searchbar>
+  <div *ngIf="!showFav && !movies.length" class="no-data">
+    <ion-text color="medium" center> 
+      <ion-label>No data</ion-label>
+      <p> Search your favourite movie! </p>
+    </ion-text>
+  </div>
+  <ion-list *ngIf="showFav">
+    <ion-text class="header">
+      <ion-label>My Favorite Movies</ion-label>
+    </ion-text>
+    
+    <ion-item button *ngFor="let item of favMovies">
+      <ion-avatar slot="start" [routerLink]="[item.id]">
+        <img [src]="imageUrl + '/w92' + item.poster_path" alt="movie poster">
+      </ion-avatar>
+      <ion-label [routerLink]="[item.id]">
+        {{ item.title }}
+        <p> {{ item.overview }} </p>
+      </ion-label>
+      <ion-badge color="primary" slot="end"> {{ item.vote_average | number:'1.1-1' }} </ion-badge>
+      <ion-icon slot="end" color= "danger" name="heart" (click)="like(item)"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-item button *ngFor="let item of movies">
+      <ion-avatar slot="start" [routerLink]="[item.id]">
+        <img [src]="imageUrl + '/w92' + item.poster_path" alt="movie poster">
+      </ion-avatar>
+      <ion-label [routerLink]="[item.id]">
+        {{ item.title }}
+        <p> {{ item.overview }} </p>
+      </ion-label>
+      <ion-badge color="primary" slot="end"> {{ item.vote_average | number:'1.1-1' }} </ion-badge>
+      <ion-icon *ngIf="!item.liked" slot="end" color= "medium" name="heart-outline" (click)="like(item)"></ion-icon>
+      <ion-icon *ngIf="item.liked" slot="end" color= "danger" name="heart" (click)="like(item)"></ion-icon>
+      <ion-icon slot="end" name="thumbs-down-outline" (click)="remove(item)"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="loadMore($event)" >
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data..."
+    ></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+
+
+</ion-content>
